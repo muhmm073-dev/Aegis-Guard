@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 """
 Aegis Guard v6.2 PRO - Tek Dosya Sürümü
-Özellikler:
-- Güvenlik motoru (sürekli süreç tarama)
+Tüm özellikler:
+- Güvenlik motoru
 - Oyun modu optimizasyonu
 - Aryus modu (sakinleştirici müzik)
 - FPS / RAM göstergesi
@@ -13,14 +13,11 @@ Aegis Guard v6.2 PRO - Tek Dosya Sürümü
 - SQLite veri tabanı logları
 """
 
-import os, threading, time, sqlite3, psutil, platform, tkinter as tk
+import os, threading, time, sqlite3, psutil, tkinter as tk
 from tkinter import ttk, messagebox
 from playsound import playsound
 from PIL import Image, ImageTk
 
-# -------------------------------
-# Genel Ayarlar
-# -------------------------------
 APP_NAME = "Aegis Guard"
 VERSION = "6.2 PRO"
 
@@ -39,7 +36,7 @@ EMOJIS = {
 }
 
 # -------------------------------
-# Logger ve Veri Tabanı
+# Logger
 # -------------------------------
 class Logger:
     def __init__(self, ui_callback=None):
@@ -91,7 +88,7 @@ class SecurityEngine:
             time.sleep(2)
 
 # -------------------------------
-# Oyun Modu Optimizasyonu
+# Oyun Modu
 # -------------------------------
 class GameOptimizer:
     def __init__(self, logger):
@@ -115,7 +112,7 @@ class GameOptimizer:
             time.sleep(5)
 
 # -------------------------------
-# Aryus Modu (Sakinleştirici Müzik)
+# Aryus Modu
 # -------------------------------
 class AryusMode:
     def __init__(self, logger):
@@ -140,13 +137,13 @@ class AryusMode:
             except: break
 
 # -------------------------------
-# Ses Efektleri
+# Ses
 # -------------------------------
 def play_start(): threading.Thread(target=lambda: playsound("sounds/start.wav"), daemon=True).start()
 def play_stop(): threading.Thread(target=lambda: playsound("sounds/stop.wav"), daemon=True).start()
 
 # -------------------------------
-# Splash Ekran
+# Splash
 # -------------------------------
 def show_splash(root,image_path="splash.png",duration=2000):
     splash = tk.Toplevel(root)
@@ -237,7 +234,7 @@ class AegisGuardApp(tk.Tk):
         self.after(16,self._update_fps)
 
     def _quit(self):
-        if tk.messagebox.askyesno("Çıkış","Uygulamadan çıkmak istiyor musunuz?"):
+        if messagebox.askyesno("Çıkış","Uygulamadan çıkmak istiyor musunuz?"):
             self.engine.stop()
             self.optimizer.deactivate()
             self.aryus.stop()
