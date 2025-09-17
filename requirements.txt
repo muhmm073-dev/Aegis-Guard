@@ -1,4 +1,0 @@
-# requirements.txt
-azure-functions
-requests
-# Add other dependencies as needed
