@@ -1,0 +1,20 @@
+name: APIsec Scan
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Trigger APIsec Scan
+        env:
+          APISEC_TOKEN: ${{ secrets.APISEC_TOKEN }}
+        run: |
+          curl -X POST "https://api.apisec.ai/scan" \
+               -H "Authorization: Bearer $APISEC_TOKEN" \
+               -d '{"target":"https://example.com"}'
