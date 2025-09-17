@@ -17,3 +17,5 @@ Profesyonel güvenlik ve oyun optimizasyon yazılımı.
 ```bash
 pip install pyinstaller playsound pillow psutil
 
+- name: Install dependencies
+  run: pip install -r path/to/your/requirements.txt
