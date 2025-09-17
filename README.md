@@ -17,3 +17,16 @@ Windows EXE ve Linux AppImage ile çalışır.
 ```bash
 pip install pyinstaller playsound pillow psutil
 
+
+---
+
+## **4️⃣ GitHub’a Yükleme Adımları**
+1. GitHub repo oluştur: `AegisGuard-v6.2`  
+2. Repo’yu yerel klasöre bağla:
+```bash
+git init
+git add .
+git commit -m "v6.2 initial commit"
+git branch -M main
+git remote add origin https://github.com/username/AegisGuard-v6.2.git
+git push -u origin main
