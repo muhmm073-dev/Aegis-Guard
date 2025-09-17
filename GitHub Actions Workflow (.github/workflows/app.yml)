@@ -1,0 +1,41 @@
+name: Build Aegis Guard v6.2
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install Dependencies
+      run: |
+        pip install --upgrade pip
+        pip install pyinstaller playsound pillow psutil
+
+    - name: Build Application
+      run: |
+        python build_aegis.py
+
+    - name: Upload Release Asset
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          dist/neox45_v6.exe
+          dist/neox45_v6
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
