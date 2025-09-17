@@ -1,3 +1,3 @@
 def test_dummy():
-    """Basit test her zaman başarılı"""
+    """Simple test always passes"""
     assert 1 + 1 == 2
