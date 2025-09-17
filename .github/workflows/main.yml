@@ -38,12 +38,22 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Trigger APIsec Scan
+      - name: Trigger APIsec Scan Script
         env:
-          APISEC_TOKEN: ${{ secrets.APISEC_TOKEN }}
+          APISEC_USERNAME: AegisGuardTeam
+          APISEC_PASSWORD: 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
         run: |
-          echo "Starting APIsec scan..."
-          curl -v -X POST "https://api.apisec.ai/scan" \
-               -H "Authorization: Bearer $APISEC_TOKEN" \
-               -H "Content-Type: application/json" \
-               -d '{"target":"https://example.com","scanType":"full"}'
+          set -x
+          ${GITHUB_ACTION_PATH}/apisec-run-scan.sh \
+            --username AegisGuardTeam
+            --password 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
+            --project "VAmPI" \
+            --profile "Master" \
+            --scanner "" \
+            --outputfile "apisec-results.sarif" \
+            --refresh-playbooks "" \
+            --host "https://example.com" \
+            --emailReport "false" \
+            --fail-on-vuln-severity "high" \
+            --oas "false" \
+            --openApiSpecUrl ""
