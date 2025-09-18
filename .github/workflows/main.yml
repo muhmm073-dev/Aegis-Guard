@@ -1,0 +1,76 @@
+# İş akışının adı
+name: Aegis Guard CI + APIsec Scan
+
+# Bu iş akışını ne zaman çalıştıracağımızı belirler
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # 1. İş: Kod Kalitesi ve Test
+  lint-and-test:
+    name: Lint & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.10
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Check code formatting with Black
+        run: |
+          black --check .
+
+      - name: Run Tests
+        run: |
+          pytest tests/
+
+  # 2. İş: Güvenlik Taraması
+  apisec-scan:
+    name: APIsec Security Scan
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Trigger APIsec Scan Script
+        env:
+          APISEC_USERNAME: ${{ secrets.APISEC_USERNAME }}
+          APISEC_PASSWORD: ${{ secrets.APISEC_PASSWORD }} # BU SATIR ŞİFREYİ GÜVENLİCE ALIR
+        run: |
+          set -x
+          # Gerekirse bu satırı aktif edebilirsiniz: chmod +x ./apisec-run-scan.sh 
+          ./apisec-run-scan.sh \
+            --host "https://example.com" \
+            --project "VAmPI" \
+            --username "${APISEC_USERNAME}" \
+            --password "${APISEC_PASSWORD}" \
+            --profile "Master" \
+            --outputfile "apisec-results.sarif" \
+            --fail-on-vuln-severity "high"
+      
+      - name: Upload SARIF file to GitHub Security
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: apisec-results.sarif
