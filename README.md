@@ -1,6 +1,6 @@
 # 🛡️ Aegis Guard v8.0 – Profesyonel Güvenlik ve Optimizasyon
 
-![Aegis Guard Logo]
+![Aegis Guard Logo]https://github.com/muhmm073-dev/Aegis-Guard/blob/main/assets%2F1758404263905.jpg
 
 **Aegis Guard**, sisteminizi koruyan, oyun performansını artıran ve kişisel rahatlama modlarıyla profesyonel bir yazılımdır.  
 Bu sürüm (v8.0), **AI destekli güvenlik, gelişmiş oyun optimizasyonu ve çoklu dil desteği** ile tamamen profesyonel düzeye yükseltilmiştir.
