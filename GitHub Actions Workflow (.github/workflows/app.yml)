@@ -1,35 +1,4 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Aegis Guard v7.0 - Büyük Güncelleme
-Tek Dosya Profesyonel Sürüm
-"""
-
-import os, threading, time, sqlite3, psutil, hashlib, json
-import customtkinter as ctk
-from tkinter import messagebox, filedialog
-from playsound import playsound
-from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
-from cryptography.fernet import Fernet
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from pydub import AudioSegment
-from pydub.playback import play
-
-APP_NAME = "Aegis Guard"
-VERSION = "7.0 PRO"
-
-# -------------------------------
-# Temalar
-# -------------------------------
-THEMES = {
-    "dark": {"bg":"#0f172a","fg":"#e2e8f0"},
-    "light": {"bg":"#ffffff","fg":"#000000"}
-}
-
-# -------------------------------
-# Çoklu Dil
+#!/usr/bin/env pyth
 # -------------------------------
 LANG = {
     "tr":{"start":"Başlat","stop":"Durdur","logs":"Kayıtlar",
