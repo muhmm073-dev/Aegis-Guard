@@ -58,7 +58,4 @@ Bu sürüm (v8.0), **AI destekli güvenlik, gelişmiş oyun optimizasyonu ve ço
 
 ## ⚡ Kurulum ve Kullanım
 ```bash
-git clone https://github.com/kullanici/Aegis-Guard.git
-cd Aegis-Guard
-pip install -r requirements.txt
-python main.py
+git clone https://github.com/kullanici/Aegis-Gu
