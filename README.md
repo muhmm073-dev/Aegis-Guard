@@ -33,7 +33,7 @@ Bu sürüm (v8.0), **AI destekli güvenlik, gelişmiş oyun optimizasyonu ve ço
 - AI ruh hali tespitine göre müzik önerisi
 - Ses görselleştirme (dalga animasyonları)
 
-![Aryus Screenshot](assets/screenshots/aryus.png)
+![Aryus Screenshot https://github.com/muhmm073-dev/Aegis-Guard/blob/main/assets%2Ffile_0000000081c861f48102f8c90fdb70be%20%281%29.png
 
 ### 🌍 Çoklu Dil Desteği
 - 20+ dil desteği (TR, EN, RU, ES, FR, DE, IT, PT, JP, ZH, AR, HI, KO vb.)
