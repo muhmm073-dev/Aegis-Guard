@@ -235,4 +235,4 @@ class AegisGuardApp(ctk.CTk):
 if __name__ == "__main__":
     ctk.set_appearance_mode("dark")
     app = AegisGuardApp(lang="tr",theme="dark")
-    app.mainloop()
+    app.mainloop() 
