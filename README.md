@@ -1,4 +1,4 @@
-Aegis X: Akıcı ve Sanatsal Sürüm (v1.1) - Resmi Özet
+#Aegis X: Akıcı ve Sanatsal Sürüm (v1.1) - Resmi Özet
 ​Aegis X'in en son sürümü olan "Akıcı ve Sanatsal Sürüm" ile tanışın! Dijital yaşamınızı yönetme şeklinizi yeniden tanımlayan bu güncelleme, performans, güvenlik ve odaklanmayı bir araya getirirken, şimdi de göz alıcı bir estetik ve eşsiz bir akıcılık sunuyor. Aegis X artık sadece akıllı değil, aynı zamanda görsel bir şölen!
 ​✨ Yenilikler ve Öne Çıkanlar:
 ​Akıcı Sistem Durumu Animasyonları: Optimus çekirdeğimizde, CPU ve RAM kullanım oranları artık statik sayılar değil. Gerçek zamanlı veriler, eski değerden yeni değere doğru yumuşak ve göz yormayan animasyonlarla akıcı bir şekilde yükselip düşüyor. Bu sayede sisteminizin nabzını çok daha dinamik ve keyifli bir şekilde takip edeceksiniz.
