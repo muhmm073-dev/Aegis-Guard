@@ -1,0 +1,13 @@
+# Aegis X - Merkezi Ayar Dosyası
+app:
+  name: "Aegis X"
+  subtitle: "Akıllı ve Bütünleşik Platform"
+  version: "1.2.0" # Sürüm numarasını buradan yönetin
+
+core_settings:
+  optimus:
+    cpu_danger_threshold: 80 # CPU alarm seviyesi (% olarak)
+    update_interval_ms: 1000
+
+ui_settings:
+  animation_duration_ms: 250 # Animasyonların hızı (milisaniye)
