@@ -1,64 +1,32 @@
-# 🛡️ Aegis Guard v8.0 – Profesyonel Güvenlik ve Optimizasyon
+# Aegis X - Nihai Bütünleşik Platform (v1.0)
 
-![Aegis Guard Logo]https://github.com/muhmm073-dev/Aegis-Guard/blob/main/assets%2F1758404263905.jpg
+**Aegis X**, sistem güvenliği, performans optimizasyonu ve kullanıcı odaklanmasını tek bir akıllı çatı altında birleştiren, yeni nesil bir masaüstü platformudur. Yapay zeka destekli çekirdeği sayesinde, sisteminizi proaktif olarak yönetir ve size tam kontrol sunar.
 
-**Aegis Guard**, sisteminizi koruyan, oyun performansını artıran ve kişisel rahatlama modlarıyla profesyonel bir yazılımdır.  
-Bu sürüm (v8.0), **AI destekli güvenlik, gelişmiş oyun optimizasyonu ve çoklu dil desteği** ile tamamen profesyonel düzeye yükseltilmiştir.
+## ✨ Öne Çıkan Özellikler
 
----
+### 💡 AEGIS HUB (Komuta Merkezi)
+* Platformun yapay zeka beyninin aldığı tüm kararları ve sistemsel uyarıları gösteren canlı bir günlük paneli.
 
-## 🚀 Öne Çıkan Özellikler
+### 🚀 OPTIMUS (Performans Motoru)
+* CPU ve RAM kullanımını gösteren anlık sistem durumu paneli.
+* Oyun tespiti yapıldığında kaynakları oyuna önceliklendiren otomatik optimizasyon.
 
-### 🔒 Güvenlik Motoru 3.0
-- Gerçek zamanlı süreç ve dosya tarama
-- Karantina sistemi ile şüpheli dosyaların güvenli şekilde izolasyonu
-- SHA256 hash ile dosya bütünlüğü kontrolü
-- USB ve harici disk koruması
-- AI destekli şüpheli süreç analizi
+### 🛡️ GUARDIAN (Güvenlik Kalkanı)
+* İnteraktif dosya ve klasör tarama motoru (SHA-256 Hash Kontrolü).
+* Tarama sırasında anlık ilerleme takibi için ilerleme çubuğu.
+* Akıllı Odak Modu için özelleştirilebilir web sitesi engelleme kalkanı.
 
-![Security Engine Screenshot](assets/screenshots/security.png)
-
-### 🎮 Optimus 3.0 – Oyun Performans Modu
-- CPU, RAM ve GPU kullanım izleme
-- Oyun başlatıldığında otomatik optimizasyon
-- Oyun profilleri: LoL, CS:GO, Valorant vb.
-- Arka plan servislerini otomatik yönetme
-- AI destekli FPS ve performans tavsiyesi
-
-![Optimus Screenshot](assets/screenshots/optimus.png)
-
-### 🌌 Aryus 3.0 – Rahatlama Modu
-- Playlist oluşturma ve yönetme
-- Spotify / YouTube entegrasyonu
-- AI ruh hali tespitine göre müzik önerisi
-- Ses görselleştirme (dalga animasyonları)
-
-![Aryus Screenshot https://github.com/muhmm073-dev/Aegis-Guard/blob/main/assets%2Ffile_0000000081c861f48102f8c90fdb70be%20%281%29.png
-
-### 🌍 Çoklu Dil Desteği
-- 20+ dil desteği (TR, EN, RU, ES, FR, DE, IT, PT, JP, ZH, AR, HI, KO vb.)
-- UI üzerinden anında dil değiştirme
-- Community çeviri sistemi ile kolay ekleme
-
-### 🛡️ Veri ve Log Yönetimi
-- AES-256 şifreli log dosyaları
-- PDF ve CSV formatında raporlama
-- Bulut senkronizasyon (Google Drive / Dropbox)
-- Grafiksel log analizi (CPU, RAM, FPS)
-
----
+### 🌌 ARYUS (Zindelik ve Odaklanma Çekirdeği)
+* **Akıllı Odak Modu:** Tek bir tuşla dikkat dağıtıcı olarak belirlediğiniz uygulamaları sonlandıran ve web sitelerini engelleyen tam fonksiyonel bir verimlilik aracı.
+* **Kalıcı Ayarlar:** Engellenecek uygulama ve site listeleri `config.json` dosyası üzerinden tamamen kişiselleştirilebilir ve tüm ayarlarınız kaydedilir.
 
 ## 💻 Sistem Gereksinimleri
-- Windows 10/11 veya Linux (Ubuntu 20.04+)
-- Python 3.9+
-- 4GB RAM ve 2GHz CPU minimum
-- İnternet bağlantısı (AI modülü ve bulut güncellemeleri için)
+* **İşletim Sistemi:** Windows 10 / 11
+* **İzinler:** Akıllı Odak Modu'nun tam fonksiyonel çalışabilmesi için programın **Yönetici olarak çalıştırılması** gerekmektedir.
+
+## 🚀 Kullanım
+1.  `dist` klasöründeki `AegisX.exe` dosyasını çalıştırın.
+2.  Platformun tüm özelliklerini sekmeler üzerinden yönetin.
+3.  Ayarlarınızı Aryus sekmesinden kalıcı olarak yapılandırın.
 
 ---
-
-## ⚡ Kurulum ve Kullanım
-```bash
-git clone https://github.com/kullanici/Aegis-Guard.git
-cd Aegis-Guard
-pip install -r requirements.txt
-python main.py
