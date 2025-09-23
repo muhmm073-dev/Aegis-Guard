@@ -1,0 +1,122 @@
+#======================================================================
+# GEREKLİ TÜM KÜTÜPHANELER
+#======================================================================
+import tkinter as tk
+from tkinter import ttk, font, filedialog, messagebox, simpledialog
+import psutil
+import time
+import collections
+import hashlib
+import os
+import threading
+import json
+import yaml  # YENİ: YAML dosyasını okumak için yaml kütüphanesini içe aktar
+
+#======================================================================
+# TEMA VE DİĞER MODÜLLER...
+# (Bu kısımlarda değişiklik yok)
+#======================================================================
+class Theme:
+    BG_PRIMARY = "#1E1E1E"; BG_SECONDARY = "#2D2D2D"; BG_WIDGET = "#121212"
+    TEXT_PRIMARY = "#EAEAEA"; TEXT_SECONDARY = "#A9A9A9"; ACCENT_PRIMARY = "#007ACC"
+    ACCENT_SECONDARY = "#00FF41"; DANGER_COLOR = "#8B0000"
+    FONT_DEFAULT = ("Segoe UI", 10); FONT_BOLD = ("Segoe UI", 10, "bold")
+    FONT_LARGE = ("Segoe UI", 14); FONT_XLARGE_BOLD = ("Segoe UI", 24, "bold"); FONT_MONO = ("Consolas", 11)
+
+# ConfigManager, SystemService, AegisHub, OptimusHybrid, AegisGuardian, Aryus, AegisCore sınıfları...
+# Bu sınıfların içinde değişiklik yok, aynı şekilde kalabilirler.
+# ... (Önceki kodun ilgili sınıflarını buraya kopyalayın) ...
+
+#======================================================================
+# ARAYÜZ KATMANI: MainWindow (GÜNCELLENDİ)
+#======================================================================
+class MainWindow(tk.Tk):
+    def __init__(self, hub, system_service, guardian, ai_core, config_data): # GÜNCELLENDİ: config_manager yerine config_data alıyor
+        super().__init__()
+        self.hub, self.system_service, self.guardian, self.ai_core = hub, system_service, guardian, ai_core
+        self.config = config_data  # GÜNCELLENDİ: Ayar verisini değişkene ata
+
+        # GÜNCELLENDİ: Pencere başlığını ve sürümünü YAML'dan al
+        app_config = self.config.get('app', {})
+        title = app_config.get('name', 'Aegis X')
+        subtitle = app_config.get('subtitle', 'Platform')
+        version = app_config.get('version', '1.0')
+        self.title(f"{title}: {subtitle} (v{version})")
+        
+        self.geometry("950x750")
+        self.configure(bg=Theme.BG_PRIMARY)
+
+        self.prev_cpu_val = 0
+        self.prev_ram_val = 0
+        
+        self._setup_styles()
+        self._load_icons()
+        self.hub.register_ui_callback("log", lambda data: self._update_log_ui())
+        # ... (Diğer register_ui_callback'ler)
+
+        self._create_widgets()
+
+    def _animate_value(self, target_var, start_val, end_val, suffix=" %"):
+        # GÜNCELLENDİ: Animasyon hızını YAML'dan al
+        duration = self.config.get('ui_settings', {}).get('animation_duration_ms', 300)
+        steps = 15
+        step_val = (end_val - start_val) / steps
+        delay = duration // steps
+        
+        def update_step(current_step):
+            new_val = start_val + (step_val * current_step)
+            target_var.set(f"{new_val:.1f}{suffix}")
+            if current_step < steps: self.after(delay, lambda: update_step(current_step + 1))
+        update_step(1)
+
+    def _update_live_stats(self):
+        cpu_val = self.system_service.get_cpu_usage()
+        # ... (ram_val ve animasyon çağırma kısımları aynı)
+        
+        # GÜNCELLENDİ: CPU eşik değerini YAML'dan al
+        cpu_threshold = self.config.get('core_settings', {}).get('optimus', {}).get('cpu_danger_threshold', 75)
+        if cpu_val > cpu_threshold:
+            self.optimus_frame.config(style="Danger.TLabelframe")
+        else:
+            self.optimus_frame.config(style="TLabelframe")
+        # ... (Diğer fonksiyonlar önceki kodla aynı)
+
+#======================================================================
+# PLATFORM BAŞLATICISI: AegisXPlatform (GÜNCELLENDİ)
+#======================================================================
+class AegisXPlatform:
+    def __init__(self):
+        # YENİ: YAML dosyasını yükle
+        try:
+            with open('app.yml', 'r', encoding='utf-8') as f:
+                self.config = yaml.safe_load(f)
+                print("app.yml başarıyla yüklendi.")
+        except FileNotFoundError:
+            print("HATA: app.yml dosyası bulunamadı! Varsayılan ayarlar kullanılacak.")
+            self.config = {} # Boş bir config ile devam et
+        except Exception as e:
+            print(f"HATA: app.yml okunurken bir sorun oluştu: {e}")
+            self.config = {}
+
+        # GÜNCELLENDİ: Config verisini MainWindow'a aktar
+        # ... (Diğer servisler ve çekirdekler başlatılıyor)
+        self.main_window = MainWindow(self.hub, self.system_service, self.guardian, self.ai_core, self.config)
+
+    def run_main_loop(self):
+        # GÜNCELLENDİ: Güncelleme sıklığını YAML'dan al
+        update_interval = self.config.get('core_settings', {}).get('optimus', {}).get('update_interval_ms', 1000)
+        self.main_window._update_live_stats()
+        self.main_window.after(update_interval, self.run_main_loop)
+
+    def start(self):
+        # ... (Önceki kodla aynı)
+        self.run_main_loop()
+        self.main_window.mainloop()
+
+#======================================================================
+# PROGRAMIN GİRİŞ NOKTASI
+#======================================================================
+if __name__ == "__main__":
+    platform = AegisXPlatform()
+    platform.start()
+
