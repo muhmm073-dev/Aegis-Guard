@@ -4,7 +4,7 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 import threading, time, os
-import psutil, yaml, json
+import psutil, yaml
 from modules.logger import Logger
 from modules.system_service import SystemService
 from modules.optimus import OptimusHybrid
@@ -43,8 +43,8 @@ class MainWindow(tk.Tk):
 
         # Pencere başlığı ve boyut
         app_cfg = config.get("app", {})
-        title = app_cfg.get("name", "Aegis X")
-        version = app_cfg.get("version", "1.0")
+        title = app_cfg.get("name", "Aegis Guardian")
+        version = app_cfg.get("version", "2.0")
         self.title(f"{title} (v{version})")
         self.geometry("950x750")
         self.configure(bg=Theme.BG_PRIMARY)
@@ -52,6 +52,7 @@ class MainWindow(tk.Tk):
         # CANLI DEĞERLER
         self.cpu_var = tk.StringVar()
         self.ram_var = tk.StringVar()
+        self.ai_var = tk.StringVar()
 
         # UI ELEMENTLERİ
         self._create_widgets()
@@ -79,6 +80,14 @@ class MainWindow(tk.Tk):
                                   font=Theme.FONT_LARGE)
         self.ram_label.pack(pady=5, padx=10, fill="x")
 
+        # AI öneri paneli
+        ai_frame = ttk.LabelFrame(self, text="AI Öneri", style="TLabelframe")
+        ai_frame.pack(pady=10, fill="x", padx=20)
+        self.ai_label = tk.Label(ai_frame, textvariable=self.ai_var,
+                                 fg=Theme.TEXT_SECONDARY, bg=Theme.BG_WIDGET,
+                                 font=Theme.FONT_LARGE, wraplength=900, justify="left")
+        self.ai_label.pack(padx=10, pady=10, fill="x")
+
         # Log ekranı
         log_frame = ttk.LabelFrame(self, text="Loglar", style="TLabelframe")
         log_frame.pack(pady=10, fill="both", expand=True, padx=20)
@@ -94,15 +103,38 @@ class MainWindow(tk.Tk):
             self.ram_var.set(f"RAM Kullanımı: {ram}%")
 
             # Kritik durum kontrolü
-            if cpu > self.config.get("core_settings", {}).get("cpu_danger_threshold", 75):
+            cpu_thresh = self.config.get("core_settings", {}).get("cpu_danger_threshold", 75)
+            ram_thresh = self.config.get("core_settings", {}).get("ram_danger_threshold", 80)
+
+            if cpu > cpu_thresh:
                 self.cpu_label.config(fg=Theme.DANGER_COLOR)
                 self.logger.warning(f"CPU tehlike eşiğini geçti: {cpu}%")
+                if self.config.get("sound_alerts", {}).get("enable", True):
+                    os.system(f'start /min mplay32 "{self.config["sound_alerts"]["cpu_threshold_sound"]}"')
             else:
                 self.cpu_label.config(fg=Theme.ACCENT_PRIMARY)
+
+            if ram > ram_thresh:
+                self.ram_label.config(fg=Theme.DANGER_COLOR)
+                self.logger.warning(f"RAM tehlike eşiğini geçti: {ram}%")
+                if self.config.get("sound_alerts", {}).get("enable", True):
+                    os.system(f'start /min mplay32 "{self.config["sound_alerts"]["ram_threshold_sound"]}"')
+            else:
+                self.ram_label.config(fg=Theme.ACCENT_SECONDARY)
+
+            # AI önerisi
+            if self.config.get("core_settings", {}).get("enable_ai", True):
+                ai_text = self.ai_core.analyze(cpu, ram)
+                self.ai_var.set(ai_text)
+
+            # Optimus otomatik kontrol
+            if self.config.get("core_settings", {}).get("enable_optimus", True):
+                self.optimus.optimize()
 
         except Exception as e:
             self.logger.error(f"Performans güncelleme hatası: {e}")
 
+        # Yenileme
         self.after(self.config.get("core_settings", {}).get("update_interval_ms", 1000),
                    self.update_stats)
 
@@ -112,8 +144,9 @@ class MainWindow(tk.Tk):
         self.log_text.see("end")
         self.log_text.config(state="disabled")
 
+
 #======================================================================
-# PROGRAM GİRİŞ NOKTASI
+# PROGRAMIN GİRİŞ NOKTASI
 #======================================================================
 if __name__ == "__main__":
     # YAML ayar dosyası
@@ -122,16 +155,21 @@ if __name__ == "__main__":
             config = yaml.safe_load(f)
     except Exception as e:
         print(f"app.yml yüklenemedi: {e}")
-        config = {"app":{"name":"Aegis X","version":"1.0"}, "core_settings":{"cpu_danger_threshold":75, "update_interval_ms":1000}}
+        config = {
+            "app": {"name":"Aegis Guardian","version":"2.0"},
+            "core_settings":{"cpu_danger_threshold":75, "ram_danger_threshold":80, "update_interval_ms":1000,
+                             "enable_ai":True, "enable_optimus":True},
+            "sound_alerts":{"enable":True,"cpu_threshold_sound":"assets/cpu_alert.wav","ram_threshold_sound":"assets/ram_alert.wav"}
+        }
 
-    # LOGER
-    logger = Logger()
+    # Logger
+    logger = Logger(config.get("core_settings", {}).get("log_file", "aegis_log.txt"))
 
-    # SERVİSLER
+    # Servisler
     system_service = SystemService()
     optimus = OptimusHybrid()
     ai_core = AI_Core()
 
-    # ANA PENCERE
+    # Ana Pencere
     app = MainWindow(config, logger, system_service, optimus, ai_core)
     app.mainloop()
