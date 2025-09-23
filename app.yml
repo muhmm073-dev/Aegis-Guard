@@ -1,0 +1,46 @@
+#======================================================================
+# AEGIS-GUARD PROFESYONEL YAPILANDIRMA
+#======================================================================
+
+app:
+  name: "Aegis Guardian"
+  subtitle: "Platform"
+  version: "2.0"
+  author: "Muhmmet Eryavuz"
+  logo: "assets/logo.png"
+  splash_screen: "assets/splash.png"
+
+core_settings:
+  cpu_danger_threshold: 75      # CPU kritik eşik değeri %
+  ram_danger_threshold: 80      # RAM kritik eşik değeri %
+  update_interval_ms: 1000      # CPU/RAM güncelleme sıklığı (ms)
+  log_file: "aegis_log.txt"     # Log dosyası
+  enable_optimus: true          # Otomatik optimizasyon
+  enable_ai: true               # AI öneri sistemi
+
+ui_settings:
+  theme:
+    bg_primary: "#1E1E1E"
+    bg_secondary: "#2D2D2D"
+    bg_widget: "#121212"
+    text_primary: "#EAEAEA"
+    text_secondary: "#A9A9A9"
+    accent_primary: "#007ACC"
+    accent_secondary: "#00FF41"
+    danger_color: "#FF5555"
+  font_default: ["Segoe UI", 10]
+  font_bold: ["Segoe UI", 10, "bold"]
+  font_large: ["Segoe UI", 14]
+  font_xlarge_bold: ["Segoe UI", 24, "bold"]
+  font_mono: ["Consolas", 11]
+  animation_duration_ms: 300     # UI animasyon süresi
+
+log_settings:
+  enable_console: true
+  enable_file: true
+  max_log_lines: 500
+
+sound_alerts:
+  enable: true
+  cpu_threshold_sound: "assets/cpu_alert.wav"
+  ram_threshold_sound: "assets/ram_alert.wav"
