@@ -1,0 +1,21 @@
+
+## `pyproject.toml` (basit paket ayarları)
+```toml
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aegis-guard"
+version = "0.1.0"
+description = "Aegis Guard — lightweight guard tool"
+readme = "README.md"
+requires-python = ">=3.8"
+authors = [{name = "muhmm073-dev"}]
+license = {text = "BSL-1.0"}
+dependencies = [
+    "psutil>=5.9.0",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/muhmm073-dev/Aegis-Guard"
