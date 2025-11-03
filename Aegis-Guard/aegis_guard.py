@@ -1,109 +1,73 @@
-#======================================================================
-# AEGIS GUARD v66 PRO
-#======================================================================
-import tkinter as tk
-from tkinter import ttk, font, messagebox
-import psutil
-import threading
+#!/usr/bin/env python3
+"""
+Aegis Guard - basit CLI iskeleti
+"""
+
+from __future__ import annotations
+import argparse
+import logging
+import sys
 import time
-import yaml
-import os
+from typing import Optional
 
-#======================================================================
-# THEME
-#======================================================================
-class Theme:
-    BG_PRIMARY = "#1E1E1E"
-    BG_SECONDARY = "#2D2D2D"
-    TEXT_PRIMARY = "#EAEAEA"
-    ACCENT_PRIMARY = "#00BFFF"
-    DANGER_COLOR = "#FF4500"
-    FONT_DEFAULT = ("Segoe UI", 10)
-    FONT_BOLD = ("Segoe UI", 10, "bold")
-    FONT_LARGE = ("Segoe UI", 14)
-    FONT_XLARGE = ("Segoe UI", 20, "bold")
+try:
+    import psutil
+except Exception:  # psutil opsiyonel; hata varsa uyarı ver
+    psutil = None
 
-#======================================================================
-# SYSTEM SERVICE (CPU/RAM MONITOR)
-#======================================================================
-class SystemService:
-    def get_cpu_usage(self):
-        return psutil.cpu_percent(interval=0.5)
+LOG = logging.getLogger("aegis_guard")
 
-    def get_ram_usage(self):
-        return psutil.virtual_memory().percent
+def setup_logging(level: int = logging.INFO) -> None:
+    handler = logging.StreamHandler(sys.stdout)
+    formatter = logging.Formatter("[%(asctime)s] %(levelname)s: %(message)s", "%Y-%m-%d %H:%M:%S")
+    handler.setFormatter(formatter)
+    LOG.addHandler(handler)
+    LOG.setLevel(level)
 
-#======================================================================
-# MAIN WINDOW
-#======================================================================
-class MainWindow(tk.Tk):
-    def __init__(self, config):
-        super().__init__()
-        self.config_data = config
-        self.title(f"{config.get('app', {}).get('name','Aegis Guard')} v66 PRO")
-        self.geometry("900x700")
-        self.configure(bg=Theme.BG_PRIMARY)
-        self.system_service = SystemService()
-        self._setup_ui()
-        self.update_stats_loop()
+def check_system(threshold: float = 80.0) -> dict:
+    """Basit sistem kontrolü: CPU ve RAM kullanımı (psutil varsa)."""
+    data = {"cpu": None, "ram": None}
+    if psutil:
+        data["cpu"] = psutil.cpu_percent(interval=0.5)
+        mem = psutil.virtual_memory()
+        data["ram"] = mem.percent
+    else:
+        LOG.warning("psutil bulunamadı; sistem verisi alınamıyor.")
+    return data
 
-    def _setup_ui(self):
-        self.cpu_var = tk.StringVar(value="CPU: 0%")
-        self.ram_var = tk.StringVar(value="RAM: 0%")
-
-        # CPU Label
-        self.cpu_label = tk.Label(self, textvariable=self.cpu_var, font=Theme.FONT_LARGE, bg=Theme.BG_PRIMARY, fg=Theme.TEXT_PRIMARY)
-        self.cpu_label.pack(pady=20)
-
-        # RAM Label
-        self.ram_label = tk.Label(self, textvariable=self.ram_var, font=Theme.FONT_LARGE, bg=Theme.BG_PRIMARY, fg=Theme.TEXT_PRIMARY)
-        self.ram_label.pack(pady=20)
-
-        # Log Panel
-        self.log_text = tk.Text(self, height=15, bg=Theme.BG_SECONDARY, fg=Theme.TEXT_PRIMARY, font=Theme.FONT_DEFAULT)
-        self.log_text.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
-
-    def log(self, message):
-        self.log_text.insert(tk.END, f"{time.strftime('%H:%M:%S')} - {message}\n")
-        self.log_text.see(tk.END)
-
-    def update_stats_loop(self):
-        cpu = self.system_service.get_cpu_usage()
-        ram = self.system_service.get_ram_usage()
-
-        cpu_threshold = self.config_data.get('core_settings', {}).get('cpu_danger_threshold', 75)
-        ram_threshold = self.config_data.get('core_settings', {}).get('ram_danger_threshold', 80)
-
-        self.cpu_var.set(f"CPU: {cpu}%")
-        self.ram_var.set(f"RAM: {ram}%")
-
-        if cpu > cpu_threshold:
-            self.cpu_label.config(fg=Theme.DANGER_COLOR)
-            self.log("CPU usage high! Optimizasyon önerisi uygulanabilir.")
-        else:
-            self.cpu_label.config(fg=Theme.TEXT_PRIMARY)
-
-        if ram > ram_threshold:
-            self.ram_label.config(fg=Theme.DANGER_COLOR)
-            self.log("RAM usage high! Gereksiz işlemler kapatılabilir.")
-        else:
-            self.ram_label.config(fg=Theme.TEXT_PRIMARY)
-
-        # 1 saniyede bir güncelle
-        self.after(1000, self.update_stats_loop)
-
-#======================================================================
-# APP START
-#======================================================================
-def load_config():
+def run_monitor(interval: float = 5.0, threshold: float = 80.0) -> None:
+    LOG.info("Monitor başlatıldı (interval=%s threshold=%s)", interval, threshold)
     try:
-        with open("app.yml", "r", encoding="utf-8") as f:
-            return yaml.safe_load(f)
-    except Exception as e:
-        print(f"HATA: YAML okunamadı: {e}")
-        return {}
+        while True:
+            data = check_system(threshold)
+            if data["cpu"] is not None:
+                LOG.info("CPU: %.1f%% | RAM: %.1f%%", data["cpu"], data["ram"])
+                if data["cpu"] > threshold or data["ram"] > threshold:
+                    LOG.warning("Sistem eşiğini aştı! (threshold=%s)", threshold)
+            else:
+                LOG.debug("Sistem verisi yok.")
+            time.sleep(interval)
+    except KeyboardInterrupt:
+        LOG.info("Monitor durduruldu (CTRL+C).")
+
+def build_parser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(prog="aegis_guard", description="Aegis Guard CLI")
+    p.add_argument("--interval", "-i", type=float, default=5.0, help="Monitor aralığı (saniye)")
+    p.add_argument("--threshold", "-t", type=float, default=80.0, help="Uyarı eşiği (%)")
+    p.add_argument("--debug", action="store_true", help="Debug logging aç")
+    p.add_argument("--once", action="store_true", help="Sadece bir kere çalıştır (test amaçlı)")
+    return p
+
+def main(argv: Optional[list[str]] = None) -> int:
+    args = build_parser().parse_args(argv)
+    setup_logging(logging.DEBUG if args.debug else logging.INFO)
+    if args.once:
+        data = check_system(args.threshold)
+        if data["cpu"] is not None:
+            LOG.info("Tek seferlik kontrol -> CPU: %.1f%% RAM: %.1f%%", data["cpu"], data["ram"])
+        return 0
+    run_monitor(interval=args.interval, threshold=args.threshold)
+    return 0
 
 if __name__ == "__main__":
-    config = load_config()
-    app = MainWindow(config)
-    app.mainloop()
+    raise SystemExit(main())
